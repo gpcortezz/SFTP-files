@@ -17,8 +17,8 @@ with open('config.json', 'r') as config_file:
 
 app = Flask(__name__)
 
-@app.route("/<filename>/<specific_filename>", methods=['GET'])
-def SFTPfle(filename, specific_filename):
+@app.route("/<compressed_file>/<filename>", methods=['GET'])
+def SFTPfle(compressed_file, filename):
     sftp_config = config.get('sftp', {})
     hostname = sftp_config.get('hostname')
     port = sftp_config.get('port', 22)
@@ -36,7 +36,7 @@ def SFTPfle(filename, specific_filename):
         # Open SFTP connection
         sftp_client = client.open_sftp()
 
-        # Construct the directory path based on the filename parameter
+        # Construct the directory path based on the compressed_file parameter
         directory_path = sftp_config.get('directory_path')
         
         logger.info(f"Listing files in directory: {directory_path}")
@@ -45,7 +45,7 @@ def SFTPfle(filename, specific_filename):
         logger.info(files)
 
         # Find the specific file with the format "month-year.tar.gz"
-        file_to_download = next((f for f in files if f.endswith('.tar.gz') and f.startswith(filename)), None)
+        file_to_download = next((f for f in files if f.endswith('.tar.gz') and f.startswith(compressed_file)), None)
         
         # If the file is found, get its contents
         if file_to_download:
@@ -60,19 +60,19 @@ def SFTPfle(filename, specific_filename):
                         # Get a list of names of files in the archive
                         file_names = tar.getnames()
                         # Check if the specific file exists in the archive
-                        if specific_filename in file_names:
+                        if filename in file_names:
                             # Extract the specific file from the archive
-                            specific_file = tar.extractfile(specific_filename)
+                            specific_file = tar.extractfile(filename)
                             if specific_file:
                                 # Read the contents of the specific file
                                 content = specific_file.read()
 
-                                # Guardar los bytes en un archivo temporal
+                                # Save the mp3 file to a temporary file
                                 with tempfile.NamedTemporaryFile(suffix='.mp3', delete=False) as temp_file:
                                     temp_file.write(content)
                                     temp_file_path = temp_file.name
 
-                                # Devolver el archivo MP3 como respuesta
+                                # Return the mp3 file as response
                                 return send_file(temp_file_path, mimetype='audio/mpeg')
                             else:
                                 return "Failed to read specific file."
