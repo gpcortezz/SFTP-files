@@ -4,12 +4,13 @@ This Flask application allows you to download files from an SFTP server. It prov
 
 `Flask` and `Paramiko` have to be installed to work propertly
 
+```bash
 sudo apt update
 sudo apt install python3
 sudo apt install python3-pip
 sudo pip install paramiko
 sudo pip install flask
-
+```
 ---
 
 ## Configuration File (`config.json`)
