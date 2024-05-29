@@ -20,7 +20,7 @@ Create a `config.json` file with the following structure and fill it with the se
 ```json
 {
     "sftp": {
-        "hostname": "your_hostname",
+        "host": "your_host",
         "port": "your_port_number", 
         "username": "your_username",
         "password": "your_password",
@@ -29,5 +29,5 @@ Create a `config.json` file with the following structure and fill it with the se
 }
 
 ```
-Replace `"your_hostname"`, `your_port_number`, `"your_username"`, `"your_password"`, and `"/your/directory/path"` with your actual server values.
+Replace `"your_host"`, `your_port_number`, `"your_username"`, `"your_password"`, and `"/your/directory/path"` with your actual server values.
 Port is set as 22 by default in a SFTP connection.
