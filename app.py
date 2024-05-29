@@ -20,7 +20,7 @@ app = Flask(__name__)
 @app.route("/<compressed_file>/<filename>", methods=['GET'])
 def SFTPfle(compressed_file, filename):
     sftp_config = config.get('sftp', {})
-    hostname = sftp_config.get('hostname')
+    host = sftp_config.get('host')
     port = sftp_config.get('port', 22)
     username = sftp_config.get('username')
     password = sftp_config.get('password')
