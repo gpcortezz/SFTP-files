@@ -31,7 +31,7 @@ def SFTPfle(compressed_file, filename):
     
     try:
         # Connect to the server
-        client.connect(hostname, port, username, password)
+        client.connect(hoste, port, username, password)
         
         # Open SFTP connection
         sftp_client = client.open_sftp()
