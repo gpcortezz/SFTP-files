@@ -1,6 +1,6 @@
 # SFTP File Download Service
 
-This Flask application allows you to download files from an SFTP server. It provides an endpoint that accepts two parameters: `filename` (the name of the compressed file) and `specific_filename` (the name of the file you want to extract from the compressed file).
+This Flask application allows you to download files from an SFTP server. It provides an endpoint that accepts two parameters: `compressed_file` (the name of the compressed file) and `filename` (the name of the file you want to extract from the compressed file).
 
 `Flask` and `Paramiko` have to be installed to work propertly
 

@@ -2,14 +2,20 @@ import json
 import paramiko
 import logging
 import tarfile
-from flask import Flask, send_file
+from flask import Flask, send_file, jsonify
 from io import BytesIO
-import tempfile
 import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+# Configure error logging to a file
+error_handler = logging.FileHandler('error.log')
+error_handler.setLevel(logging.ERROR)
+error_formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+error_handler.setFormatter(error_formatter)
+logger.addHandler(error_handler)
 
 # Load the configuration file
 with open('config.json', 'r') as config_file:
@@ -24,21 +30,19 @@ def SFTPfle(compressed_file, filename):
     port = sftp_config.get('port', 22)
     username = sftp_config.get('username')
     password = sftp_config.get('password')
+    directory_path = sftp_config.get('directory_path')
 
     # Create a new SSH client
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    
+
     try:
         # Connect to the server
         client.connect(host, port, username, password)
-        
+
         # Open SFTP connection
         sftp_client = client.open_sftp()
 
-        # Construct the directory path based on the compressed_file parameter
-        directory_path = sftp_config.get('directory_path')
-        
         logger.info(f"Listing files in directory: {directory_path}")
         # Get list of files in the directory
         files = sftp_client.listdir(directory_path)
@@ -46,51 +50,46 @@ def SFTPfle(compressed_file, filename):
 
         # Find the specific file with the format "month-year.tar.gz"
         file_to_download = next((f for f in files if f.endswith('.tar.gz') and f.startswith(compressed_file)), None)
-        
+
         # If the file is found, get its contents
         if file_to_download:
-            try:
-                # Download the file into memory
-                with BytesIO() as file_buffer:
-                    sftp_client.getfo(os.path.join(directory_path, file_to_download), file_buffer)
-                    file_buffer.seek(0)
-                    
-                    # Open the tar.gz file from memory
-                    with tarfile.open(fileobj=file_buffer, mode="r:gz") as tar:
-                        # Get a list of names of files in the archive
-                        file_names = tar.getnames()
-                        # Check if the specific file exists in the archive
-                        if filename in file_names:
-                            # Extract the specific file from the archive
-                            specific_file = tar.extractfile(filename)
-                            if specific_file:
-                                # Read the contents of the specific file
-                                content = specific_file.read()
+            with BytesIO() as file_buffer:
+                sftp_client.getfo(os.path.join(directory_path, file_to_download), file_buffer)
+                file_buffer.seek(0)
 
-                                # Save the mp3 file to a temporary file
-                                with tempfile.NamedTemporaryFile(suffix='.mp3', delete=False) as temp_file:
-                                    temp_file.write(content)
-                                    temp_file_path = temp_file.name
+                with tarfile.open(fileobj=file_buffer, mode="r:gz") as tar:
+                    file_names = tar.getnames()
+                    if filename in file_names:
+                        specific_file = tar.extractfile(filename)
+                        if specific_file:
+                            content = specific_file.read()
 
-                                # Return the mp3 file as response
-                                return send_file(temp_file_path, mimetype='audio/mpeg')
-                            else:
-                                return "Failed to read specific file."
+                            # Return the file directly from memory
+                            return send_file(
+                                BytesIO(content),
+                                download_name=filename,
+                                mimetype='audio/mpeg'
+                            )
                         else:
-                            return "Specific file not found in archive."
-            finally:
-                # Close SFTP connection
-                sftp_client.close()
+                            return jsonify({"error": "Failed to read specific file."}), 500
+                    else:
+                        return jsonify({"error": "Specific file not found in archive."}), 404
         else:
-            return "File not found."
-
+            return jsonify({"error": "File not found."}), 404
     except FileNotFoundError as e:
-        return str(e)
+        logger.error(f"FileNotFoundError: { directory_path } not found.")
+        return jsonify({"error": str(e)}), 404
     except PermissionError as e:
-        return str(e)
+        logger.error(f"PermissionError: {e}")
+        return jsonify({"error": str(e)}), 403
     except Exception as e:
-        logger.error(str(e))
-        return str(e)
-    
+        logger.error(f"Exception: {e}")
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if 'sftp_client' in locals():
+            sftp_client.close()
+        if 'client' in locals():
+            client.close()
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
