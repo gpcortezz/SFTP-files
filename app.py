@@ -4,6 +4,7 @@ import logging
 import tarfile
 from flask import Flask, send_file, jsonify
 from io import BytesIO
+import socket
 import os
 
 # Configure logging
@@ -37,8 +38,8 @@ def SFTPfle(compressed_file, filename):
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
     try:
-        # Connect to the server
-        client.connect(host, port, username, password)
+        # Connect to the server with a timeout
+        client.connect(host, port, username, password, timeout=5)
 
         # Open SFTP connection
         sftp_client = client.open_sftp()
@@ -77,11 +78,14 @@ def SFTPfle(compressed_file, filename):
         else:
             return jsonify({"error": "File not found."}), 404
     except FileNotFoundError as e:
-        logger.error(f"FileNotFoundError: { directory_path } not found.")
+        logger.error(f"FileNotFoundError: {e}")
         return jsonify({"error": str(e)}), 404
     except PermissionError as e:
         logger.error(f"PermissionError: {e}")
         return jsonify({"error": str(e)}), 403
+    except socket.timeout as e:
+        logger.error(f"Connection timed out.")
+        return jsonify({"error": "Connection timed out."}), 504
     except Exception as e:
         logger.error(f"Exception: {e}")
         return jsonify({"error": str(e)}), 500
