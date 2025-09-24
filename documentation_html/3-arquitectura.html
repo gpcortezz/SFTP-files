@@ -1,0 +1,22 @@
+<meta charset="UTF-8">
+<h2>3.1. Diseño General:</h2>
+<p>Arquitectura basada en microservicios con una aplicación Flask que actúa como intermediario entre clientes HTTP y servidores SFTP. La aplicación recibe solicitudes HTTP y realiza conexiones SFTP para transferir archivos.</p>
+
+<h2>3.2. Capas y Módulos:</h2>
+<ul>
+    <li><strong>Capa de Presentación:</strong> API REST con Flask</li>
+    <li><strong>Capa de Servicios:</strong> Lógica de negocio para manejo de conexiones SFTP</li>
+    <li><strong>Capa de Acceso a Datos:</strong> Cliente SFTP usando Paramiko</li>
+</ul>
+
+<h2>3.3. Patrones de Diseño:</h2>
+<p><em>No especificado</em></p>
+
+<h2>3.4. Flujo de Datos Principal:</h2>
+<ol>
+    <li>Cliente HTTP realiza solicitud GET a la API</li>
+    <li>Flask procesa la ruta dinámica /&lt;compressed_file&gt;/&lt;filename&gt;</li>
+    <li>La aplicación establece conexión SFTP con servidor remoto</li>
+    <li>Se descarga el archivo solicitado desde el servidor SFTP</li>
+    <li>El archivo se devuelve como respuesta HTTP al cliente</li>
+</ol>

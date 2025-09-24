@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación - SFTP Files</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8fafc;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #0052FF, #983560);
+            color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,82,255,0.3);
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 0;
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid #0052FF;
+        }
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .card h3 {
+            margin: 0 0 15px 0;
+            color: #0052FF;
+            font-size: 1.3em;
+        }
+        .card p {
+            margin: 0 0 15px 0;
+            color: #666;
+        }
+        .card a {
+            display: inline-block;
+            background: #0052FF;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .card a:hover {
+            background: #0041CC;
+        }
+        .info-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .info-section h2 {
+            color: #0052FF;
+            margin-top: 0;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .tech-tag {
+            background: #e3f2fd;
+            color: #0052FF;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>SFTP Files</h1>
+        <p>Documentación Técnica Completa</p>
+    </div>
+
+    <div class="info-section">
+        <h2>Descripción del Proyecto</h2>
+        <p>Una aplicación Flask que proporciona acceso a archivos comprimidos a través de una API REST, utilizando conexiones SFTP para la gestión de archivos remotos.</p>
+        
+        <div class="tech-stack">
+            <span class="tech-tag">Python</span>
+            <span class="tech-tag">Flask</span>
+            <span class="tech-tag">Paramiko</span>
+            <span class="tech-tag">SFTP</span>
+            <span class="tech-tag">JSON</span>
+            <span class="tech-tag">Logging</span>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>1. Introducción</h3>
+            <p>Información general del proyecto, descripción del negocio y audiencia objetivo.</p>
+            <a href="1-introduccion.html">Ver Documentación</a>
+        </div>
+
+        <div class="card">
+            <h3>2. Stack Tecnológico</h3>
+            <p>Tecnologías principales, dependencias externas y herramientas de desarrollo.</p>
+            <a href="2-stack-tecnologico.html">Ver Documentación</a>
+        </div>
+
+        <div class="card">
+            <h3>3. Arquitectura</h3>
+            <p>Diseño general, capas, módulos y patrones de diseño utilizados.</p>
+            <a href="3-arquitectura.html">Ver Documentación</a>
+        </div>
+
+        <div class="card">
+            <h3>4. Estructura de Archivos</h3>
+            <p>Esquema de directorios y archivos clave del proyecto.</p>
+            <a href="4-estructura-archivos.html">Ver Documentación</a>
+        </div>
+
+        <div class="card">
+            <h3>5. Configuración y Despliegue</h3>
+            <p>Requisitos del sistema, variables de entorno y pasos de instalación.</p>
+            <a href="5-configuracion-despliegue.html">Ver Documentación</a>
+        </div>
+
+        <div class="card">
+            <h3>6. Base de Datos</h3>
+            <p>Esquema de base de datos, configuración de conexión y migraciones.</p>
+            <a href="6-base-de-datos.html">Ver Documentación</a>
+        </div>
+
+        <div class="card">
+            <h3>7. Endpoints API</h3>
+            <p>Documentación completa de los endpoints disponibles en la API.</p>
+            <a href="7-endpoints-api.html">Ver Documentación</a>
+        </div>
+
+        <div class="card">
+            <h3>8. Lógica de Negocio</h3>
+            <p>Reglas de negocio, flujos de trabajo y procesos principales.</p>
+            <a href="8-logica-negocio.html">Ver Documentación</a>
+        </div>
+
+        <div class="card">
+            <h3>9. Pruebas</h3>
+            <p>Estrategia de pruebas, herramientas y ejecución de tests.</p>
+            <a href="9-pruebas.html">Ver Documentación</a>
+        </div>
+
+        <div class="card">
+            <h3>10. Información Adicional</h3>
+            <p>Seguridad, rendimiento, tareas programadas y roadmap futuro.</p>
+            <a href="10-adicionales.html">Ver Documentación</a>
+        </div>
+    </div>
+</body>
+</html>

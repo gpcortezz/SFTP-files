@@ -1,0 +1,142 @@
+<meta charset="UTF-8">
+<h2>7.1. Visión General de la API:</h2>
+<p>La API desarrollada en el repositorio gpcortezz/SFTP-files es una aplicación Flask minimalista diseñada específicamente para servir archivos comprimidos a través de SFTP (SSH File Transfer Protocol). La API implementa un único endpoint dinámico que permite la descarga de archivos desde un servidor SFTP remoto.</p>
+
+<p><strong>Características principales:</strong></p>
+<ul>
+    <li>Framework: Flask (Python)</li>
+    <li>Protocolo de transferencia: SFTP mediante la librería Paramiko</li>
+    <li>Autenticación: Basada en credenciales SFTP (usuario/contraseña)</li>
+    <li>Formato de archivos: Soporte para archivos comprimidos</li>
+    <li>Configuración: Externa mediante archivo config.json</li>
+    <li>Logging: Sistema de registro de errores en error.log</li>
+</ul>
+
+<h2>7.2. Lista Completa de Endpoints:</h2>
+<table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse: collapse;">
+    <thead>
+        <tr style="background-color: #f2f2f2;">
+            <th>Método HTTP</th>
+            <th>Ruta</th>
+            <th>Descripción</th>
+            <th>Autenticación</th>
+            <th>Estado HTTP</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>GET</td>
+            <td>/&lt;compressed_file&gt;/&lt;filename&gt;</td>
+            <td>Descarga un archivo específico desde el servidor SFTP remoto</td>
+            <td>Credenciales SFTP (configuración externa)</td>
+            <td>200 OK, 404 Not Found, 500 Internal Server Error</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>7.3. Detalle de Endpoints Clave:</h2>
+
+<h3>Endpoint: GET /&lt;compressed_file&gt;/&lt;filename&gt;</h3>
+
+<h4>Descripción:</h4>
+<p>Este endpoint permite descargar archivos específicos desde un servidor SFTP remoto. La ruta es dinámica y acepta dos parámetros que especifican el archivo comprimido y el nombre del archivo específico a descargar.</p>
+
+<h3>Parámetros de Entrada:</h3>
+<table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse: collapse;">
+    <thead>
+        <tr style="background-color: #f2f2f2;">
+            <th>Parámetro</th>
+            <th>Tipo</th>
+            <th>Ubicación</th>
+            <th>Obligatorio</th>
+            <th>Descripción</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>compressed_file</td>
+            <td>String</td>
+            <td>Path Parameter</td>
+            <td>Sí</td>
+            <td>Nombre del archivo comprimido en el servidor SFTP remoto</td>
+        </tr>
+        <tr>
+            <td>filename</td>
+            <td>String</td>
+            <td>Path Parameter</td>
+            <td>Sí</td>
+            <td>Nombre específico del archivo dentro del archivo comprimido</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Ejemplo de Request:</h3>
+<pre><code># Ejemplo usando curl
+curl -X GET "http://localhost:5000/mi_archivo_comprimido.zip/documento.pdf"
+
+# Ejemplo de URL completa
+http://localhost:5000/backup_2024.zip/report.xlsx
+</code></pre>
+
+<h3>Ejemplo de Respuesta (Éxito - 200 OK):</h3>
+<pre><code>HTTP/1.1 200 OK
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="documento.pdf"
+Content-Length: 1048576
+
+[binary data del archivo]
+</code></pre>
+
+<h3>Ejemplo de Respuesta (Error - 404 Not Found):</h3>
+<pre><code>HTTP/1.1 404 Not Found
+Content-Type: application/json
+
+{
+    "error": "Archivo no encontrado",
+    "message": "El archivo 'documento.pdf' no existe en 'mi_archivo_comprimido.zip'",
+    "status_code": 404
+}
+</code></pre>
+
+<h3>Ejemplo de Respuesta (Error - 500 Internal Server Error):</h3>
+<pre><code>HTTP/1.1 500 Internal Server Error
+Content-Type: application/json
+
+{
+    "error": "Error de conexión SFTP",
+    "message": "No se pudo conectar al servidor SFTP remoto",
+    "status_code": 500
+}
+</code></pre>
+
+<h3>Notas Adicionales:</h3>
+<ul>
+    <li>La autenticación se maneja mediante credenciales SFTP configuradas en el archivo config.json externo</li>
+    <li>La aplicación utiliza la librería Paramiko para establecer conexiones SFTP seguras</li>
+    <li>Los errores se registran en el archivo error.log para facilitar el debugging</li>
+    <li>La configuración del servidor SFTP remoto (host, puerto, credenciales) debe definirse en config.json</li>
+    <li>Este endpoint está diseñado específicamente para servir archivos, no para operaciones CRUD completas</li>
+</ul>
+
+<h3>Controlador Asociado:</h3>
+<p><strong>Archivo:</strong> app.py (Controlador Flask principal)</p>
+<p><strong>Método:</strong> Función de ruta dinámica que maneja el endpoint GET</p>
+<p><strong>Responsabilidades:</strong></p>
+<ul>
+    <li>Procesar los parámetros de ruta compressed_file y filename</li>
+    <li>Establecer conexión SFTP con el servidor remoto</li>
+    <li>Buscar y descargar el archivo específico desde el archivo comprimido</li>
+    <li>Manejar errores de conexión y archivos no encontrados</li>
+    <li>Devolver el archivo como respuesta o mensajes de error apropiados</li>
+</ul>
+
+<h3>Configuración Requerida:</h3>
+<p>El archivo config.json debe contener la siguiente estructura:</p>
+<pre><code>{
+    "sftp_host": "host.del.servidor.com",
+    "sftp_port": 22,
+    "sftp_username": "usuario",
+    "sftp_password": "contraseña",
+    "sftp_base_path": "/ruta/base/en/servidor"
+}
+</code></pre>

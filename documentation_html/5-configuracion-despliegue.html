@@ -1,0 +1,35 @@
+<meta charset="UTF-8">
+<h2>5.1. Requisitos del Sistema:</h2>
+<ul>
+    <li>Python 3.x</li>
+    <li>Pip (gestor de paquetes de Python)</li>
+    <li>Acceso a servidor SFTP para conexiones</li>
+    <li>Puertos necesarios: 5000 (Flask por defecto), 22 (SFTP)</li>
+</ul>
+
+<h2>5.2. Variables de Entorno:</h2>
+<p><em>No se encontraron variables de entorno específicas. La configuración se maneja mediante archivo config.json</em></p>
+
+<h2>5.3. Pasos de Instalación (Entorno de Desarrollo):</h2>
+<ol>
+    <li>Clonar el repositorio: <code>git clone https://github.com/gpcortezz/SFTP-files.git</code></li>
+    <li>Navegar al directorio: <code>cd SFTP-files</code></li>
+    <li>Instalar dependencias: <code>pip install flask paramiko</code></li>
+    <li>Configurar archivo config.json con credenciales SFTP</li>
+    <li>Ejecutar la aplicación: <code>python app.py</code></li>
+</ol>
+
+<h2>5.4. Pasos de Despliegue (Entorno de Producción):</h2>
+<ol>
+    <li>Preparar servidor con Python 3.x</li>
+    <li>Instalar dependencias: <code>pip install flask paramiko</code></li>
+    <li>Configurar servidor web (nginx/apache) como proxy reverso</li>
+    <li>Usar WSGI server (Gunicorn) para producción: <code>gunicorn app:app</code></li>
+    <li>Configurar servicio systemd para ejecución automática</li>
+</ol>
+
+<h2>5.5. Scripts de Ejecución Comunes:</h2>
+<ul>
+    <li><code>python app.py</code> - Ejecutar aplicación en desarrollo</li>
+    <li><code>gunicorn app:app</code> - Ejecutar en producción con Gunicorn</li>
+</ul>
